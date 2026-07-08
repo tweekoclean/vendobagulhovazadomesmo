@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Parada Obrigatória Lanches — Cardápio</title>
+<style>
+  :root{
+    --bg:#000000;
+    --card:#0a0a0a;
+    --yellow:#ffcc00;
+    --red:#e10600;
+    --white:#ffffff;
+    --gray:#c9c9c9;
+    --line:#3a3a3a;
+    --price-bg:#ffffff;
+    --price-tx:#000000;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  html,body{background:#111;font-family:'Segoe UI',Arial,Helvetica,sans-serif;-webkit-font-smoothing:antialiased;}
+
+  /* ---- PAGE (A4-ish) ---- */
+  .page{
+    background:var(--bg);
+    color:var(--white);
+    width:210mm;
+    min-height:297mm;
+    margin:24px auto;
+    padding:22mm 18mm;
+    position:relative;
+    box-shadow:0 0 30px rgba(0,0,0,.6);
+    display:flex;
+    flex-direction:column;
+  }
+  .page::before{ /* top red bar */
+    content:"";position:absolute;top:0;left:0;right:0;height:8px;background:var(--red);
+  }
+  .page::after{ /* bottom red bar */
+    content:"";position:absolute;bottom:0;left:0;right:0;height:8px;background:var(--red);
+  }
+
+  /* ---- HEADER ---- */
+  .brand{
+    text-align:center;margin-bottom:26px;
+  }
+  .brand .logo{
+    display:inline-block;background:var(--red);color:#fff;font-weight:900;
+    padding:10px 26px;border-radius:12px;letter-spacing:1px;line-height:1.05;
+    border:3px solid #ffcc00;
+  }
+  .brand .logo span{display:block;}
+  .brand .logo .l1{font-size:20px;}
+  .brand .logo .l2{font-size:13px;color:#ffcc00;letter-spacing:3px;}
+  .brand .logo .l3{font-size:24px;}
+
+  .section-title{
+    color:var(--yellow);
+    font-size:46px;
+    font-weight:900;
+    letter-spacing:2px;
+    text-transform:uppercase;
+    margin-bottom:24px;
+    text-align:center;
+    text-shadow:2px 2px 0 rgba(0,0,0,.6);
+  }
+  .section-sub{
+    text-align:center;color:var(--gray);font-size:18px;margin:-16px 0 26px;letter-spacing:1px;
+  }
+
+  /* ---- ITEM LIST ---- */
+  .items{list-style:none;display:flex;flex-direction:column;gap:20px;flex:1;}
+  .item{display:flex;align-items:flex-end;gap:10px;}
+  .item .txt{flex:1;min-width:0;}
+  .item .name{
+    color:var(--yellow);font-size:24px;font-weight:800;text-transform:uppercase;letter-spacing:.5px;
+  }
+  .item .desc{color:var(--gray);font-size:17px;line-height:1.35;margin-top:3px;}
+  .item .dots{
+    flex:1;border-bottom:2px dotted var(--line);transform:translateY(-6px);min-width:24px;
+  }
+  .price{
+    background:var(--price-bg);color:var(--price-tx);font-weight:900;font-size:22px;
+    padding:4px 12px;border-radius:6px;white-space:nowrap;
+  }
+
+  /* ---- DUAL PRICE (two price columns) ---- */
+  .pricehead{
+    display:flex;justify-content:flex-end;gap:10px;margin-bottom:6px;
+  }
+  .pricehead .ph{
+    font-size:14px;font-weight:800;text-transform:uppercase;text-align:center;
+    width:96px;padding:6px 4px;border-radius:6px;line-height:1.1;color:#fff;
+  }
+  .ph.green{background:#0a8a3a;}
+  .ph.red{background:var(--red);}
+  .item .prices2{display:flex;gap:10px;}
+  .price.small{width:96px;text-align:center;font-size:20px;padding:4px 6px;}
+
+  /* ---- FOOTER / CONTACT ---- */
+  .contact{
+    margin-top:26px;padding-top:18px;border-top:2px solid var(--line);
+    display:flex;align-items:center;justify-content:center;gap:26px;flex-wrap:wrap;
+  }
+  .contact .phone{color:var(--white);font-size:22px;font-weight:800;display:flex;align-items:center;gap:10px;}
+  .contact .wa{color:#25D366;font-size:26px;}
+  .pagenote{position:absolute;right:10mm;bottom:14px;color:#555;font-size:12px;}
+
+  /* ---- SCREEN CONTROLS ---- */
+  .toolbar{
+    position:sticky;top:0;z-index:10;background:#1b1b1b;color:#eee;padding:12px 18px;
+    display:flex;gap:14px;align-items:center;justify-content:center;font-size:14px;border-bottom:1px solid #333;
+  }
+  .toolbar button{
+    background:var(--yellow);color:#000;border:0;padding:9px 18px;border-radius:8px;font-weight:800;cursor:pointer;font-size:14px;
+  }
+  .toolbar span{color:#aaa;}
+
+  /* ---- PRINT ---- */
+  @media print{
+    html,body{background:#000;}
+    .toolbar{display:none;}
+    .page{margin:0;box-shadow:none;width:100%;min-height:100vh;page-break-after:always;}
+    .page:last-child{page-break-after:auto;}
+  }
+  @page{size:A4;margin:0;}
+</style>
+</head>
+<body>
+
+<div class="toolbar">
+  <button onclick="window.print()">🖨️ Salvar como PDF / Imprimir</button>
+  <span>Cada seção está em sua própria página — pronto para imprimir.</span>
+</div>
+
+<!-- ================= PAGE 1 — PIZZAS ================= -->
+<section class="page">
+  <div class="brand">
+    <div class="logo">
+      <span class="l1">PARADA</span>
+      <span class="l2">OBRIGATÓRIA</span>
+      <span class="l3">LANCHES</span>
+    </div>
+  </div>
+
+  <h1 class="section-title">🍕 Pizzas</h1>
+
+  <ul class="items">
+    <li class="item">
+      <div class="txt">
+        <div class="name">Mussarela</div>
+        <div class="desc">Mussarela, orégano, tomate e azeitona</div>
+      </div>
+      <div class="dots"></div>
+      <div class="price">R$ 65,00</div>
+    </li>
+    <li class="item">
+      <div class="txt">
+        <div class="name">Calabresa</div>
+        <div class="desc">Calabresa, mussarela, orégano, tomate e azeitona</div>
+      </div>
+      <div class="dots"></div>
+      <div class="price">R$ 65,00</div>
+    </li>
+    <li class="item">
+      <div class="txt">
+        <div class="name">Americana</div>
+        <div class="desc">Mussarela, presunto, palmito, bacon, ervilha, orégano e azeitona</div>
+      </div>
+      <div class="dots"></div>
+      <div class="price">R$ 70,00</div>
+    </li>
+    <li class="item">
+      <div class="txt">
+        <div class="name">Portuguesa</div>
+        <div class="desc">Mussarela, presunto, palmito, ovos, cebola, tomate, orégano e azeitona</div>
+      </div>
+      <div class="dots"></div>
+      <div class="price">R$ 70,00</div>
+    </li>
+    <li class="item">
+      <div class="txt">
+        <div class="name">Primavera</div>
+        <div class="desc">Mussarela, catupiry, palmito, milho, cebola, tomate, orégano e azeitona</div>
+      </div>
+      <div class="dots"></div>
+      <div class="price">R$ 65,00</div>
+    </li>
+    <li class="item">
+      <div class="txt">
+        <div class="name">Mamma-Mia</div>
+        <div class="desc">Mussarela, presunto, calabresa, bacon, catupiry, milho, cebola, tomate, ervilha, orégano e azeitona</div>
+      </div>
+      <div class="dots"></div>
+      <div class="price">R$ 70,00</div>
+    </li>
+    <li class="item">
+      <div class="txt">
+        <div class="name">Lombinho Canadense</div>
+        <div class="desc">Mussarela, lombinho, catupiry, tomate, cebola, orégano e azeitona</div>
+      </div>
+      <div class="dots"></div>
+      <div class="price">R$ 65,00</div>
+    </li>
+    <li class="item">
+      <div class="txt">
+        <div class="name">Caipira</div>
+        <div class="desc">Mussarela, frango, catupiry, milho, tomate, cebola, orégano e azeitona</div>
+      </div>
+      <div class="dots"></div>
+      <div class="price">R$ 70,00</div>
+    </li>
+  </ul>
+
+  <div class="contact">
+    <div class="phone"><span class="wa">📱</span> (14) 98214-4789</div>
+    <div class="phone"><span class="wa">📱</span> (14) 98155-7309</div>
+  </div>
+  <div class="pagenote">Imagens ilustrativas</div>
+</section>
+
+<!-- ================= PAGE 2 — LANCHES ================= -->
+<section class="page">
+  <h1 class="section-title">🍔 Lanches</h1>
+
+  <div class="pricehead">
+    <div class="ph green">Pão de<br>Hambúrguer</div>
+    <div class="ph red">Pão<br>Francês</div>
+  </div>
+
+  <ul class="items">
+    <li class="item">
+      <div class="txt">
+        <div class="name">Hambúrguer</div>
+        <div class="desc">Carne, alface, cebola, tomate, catchup, mostarda, maionese e batata palha</div>
+      </div>
+      <div class="prices2"><div class="price small">R$ 12,00</div><div class="price small">R$ 14,00</div></div>
+    </li>
+    <li class="item">
+      <div class="txt">
+        <div class="name">Hambúrguer com Catupiry</div>
+        <div class="desc">Carne, alface, cebola, tomate, catupiry, catchup, mostarda, maionese e batata palha</div>
+      </div>
+      <div class="prices2"><div class="price small">R$ 18,00</div><div class="price small">R$ 20,00</div></div>
+    </li>
+    <li class="item">
+      <div class="txt">
+        <div class="name">X-Búrguer</div>
+        <div class="desc">Carne, queijo, catchup, maionese, mostarda e batata palha</div>
+      </div>
+      <div class="prices2"><div class="price small">R$ 15,00</div><div class="price small">R$ 18,00</div></div>
+    </li>
+    <li class="item">
+      <div class="txt">
+        <div class="name">Hot Dog</div>
+        <div class="desc">02 salsichas, alface, tomate, cebola, maionese, catchup, mostarda e batata palha</div>
+      </div>
+      <div class="prices2"><div class="price small">R$ 12,00</div><div class="price small">R$ 14,00</div></div>
+    </li>
+    <li class="item">
+      <div class="txt">
+        <div class="name">X-Salada</div>
+        <div class="desc">Carne, alface, tomate, cebola, queijo, presunto, maionese, catchup, mostarda e batata palha</div>
+      </div>
+      <div class="prices2"><div class="price small">R$ 25,00</div><div class="price small">R$ 28,00</div></div>
+    </li>
+    <li class="item">
+      <div class="txt">
+        <div class="name">X-Bacon</div>
+        <div class="desc">Carne, alface, tomate, cebola, queijo, bacon, maionese, mostarda, catchup e batata palha</div>
+      </div>
+      <div class="prices2"><div class="price small">R$ 30,00</div><div class="price small">R$ 34,00</div></div>
+    </li>
+    <li class="item">
+      <div class="txt">
+        <div class="name">X-Egg</div>
+        <div class="desc">Carne, alface, tomate, cebola, ovo, presunto, maionese, mostarda, catchup e batata palha</div>
+      </div>
+      <div class="prices2"><div class="price small">R$ 26,00</div><div class="price small">R$ 28,00</div></div>
+    </li>
+    <li class="item">
+      <div class="txt">
+        <div class="name">X-Egg Bacon</div>
+        <div class="desc">Carne, alface, tomate, cebola, ovo, presunto, queijo, bacon, maionese, mostarda, catchup e batata palha</div>
+      </div>
+      <div class="prices2"><div class="price small">R$ 32,00</div><div class="price small">R$ 34,00</div></div>
+    </li>
+    <li class="item">
+      <div class="txt">
+        <div class="name">Big Cheddar</div>
+        <div class="desc">02 carnes, alface, tomate, cebola, cheddar, maionese, mostarda, catchup e batata palha</div>
+      </div>
+      <div class="prices2"><div class="price small">R$ 28,00</div><div class="price small">R$ 30,00</div></div>
+    </li>
+  </ul>
+
+  <div class="contact">
+    <div class="phone"><span class="wa">📱</span> (14) 98214-4789</div>
+    <div class="phone"><span class="wa">📱</span> (14) 98155-7309</div>
+  </div>
+  <div class="pagenote">Imagens ilustrativas</div>
+</section>
+
+<!-- ================= PAGE 3 — LANCHES NO PRATO ================= -->
+<section class="page">
+  <h1 class="section-title">🍽️ Lanches no Prato</h1>
+
+  <ul class="items">
+    <li class="item">
+      <div class="txt">
+        <div class="name">Americano</div>
+        <div class="desc">Contra filé, 02 ovos, queijo, catupiry, salada e batata frita</div>
+      </div>
+      <div class="dots"></div>
+      <div class="price">R$ 50,00</div>
+    </li>
+    <li class="item">
+      <div class="txt">
+        <div class="name">Bauru no Prato</div>
+        <div class="desc">Contra filé, bacon, queijo, salada e batata frita</div>
+      </div>
+      <div class="dots"></div>
+      <div class="price">R$ 48,00</div>
+    </li>
+    <li class="item">
+      <div class="txt">
+        <div class="name">Filé de Frango</div>
+        <div class="desc">Filé de frango, bacon, queijo, salada e batata frita</div>
+      </div>
+      <div class="dots"></div>
+      <div class="price">R$ 45,00</div>
+    </li>
+    <li class="item">
+      <div class="txt">
+        <div class="name">Lombo</div>
+        <div class="desc">Lombo, bacon, queijo, salada e batata frita</div>
+      </div>
+      <div class="dots"></div>
+      <div class="price">R$ 45,00</div>
+    </li>
+  </ul>
+
+  <div class="contact">
+    <div class="phone"><span class="wa">📱</span> (14) 98214-4789</div>
+    <div class="phone"><span class="wa">📱</span> (14) 98155-7309</div>
+  </div>
+  <div class="pagenote">Imagens ilustrativas</div>
+</section>
+
+<!-- ================= PAGE 4 — PORÇÕES QUENTES ================= -->
+<section class="page">
+  <h1 class="section-title">🍟 Porções Quentes</h1>
+
+  <div class="pricehead">
+    <div class="ph green">Meia<br>Porção</div>
+    <div class="ph red">Porção<br>Inteira</div>
+  </div>
+
+  <ul class="items">
+    <li class="item">
+      <div class="txt">
+        <div class="name">Batata Mega</div>
+        <div class="desc">01 kg de batata, calabresa, bacon, queijo, cheddar e catupiry</div>
+      </div>
+      <div class="prices2"><div class="price small">—</div><div class="price small">R$ 60,00</div></div>
+    </li>
+    <li class="item">
+      <div class="txt"><div class="name">Batata Frita</div></div>
+      <div class="prices2"><div class="price small">R$ 25,00</div><div class="price small">R$ 28,00</div></div>
+    </li>
+    <li class="item">
+      <div class="txt"><div class="name">Batata Frita c/ Queijo e Bacon</div></div>
+      <div class="prices2"><div class="price small">R$ 30,00</div><div class="price small">R$ 45,00</div></div>
+    </li>
+    <li class="item">
+      <div class="txt"><div class="name">Tilápia</div></div>
+      <div class="prices2"><div class="price small">—</div><div class="price small">R$ 50,00</div></div>
+    </li>
+    <li class="item">
+      <div class="txt">
+        <div class="name">Contra Filé</div>
+        <div class="desc">Com tomate, cebola, queijo e pão</div>
+      </div>
+      <div class="prices2"><div class="price small">R$ 50,00</div><div class="price small">R$ 65,00</div></div>
+    </li>
+    <li class="item">
+      <div class="txt"><div class="name">Filé Frango</div></div>
+      <div class="prices2"><div class="price small">—</div><div class="price small">R$ 40,00</div></div>
+    </li>
+    <li class="item">
+      <div class="txt">
+        <div class="name">Calabresa</div>
+        <div class="desc">Com tomate, cebola e pão</div>
+      </div>
+      <div class="prices2"><div class="price small">R$ 30,00</div><div class="price small">R$ 45,00</div></div>
+    </li>
+    <li class="item">
+      <div class="txt">
+        <div class="name">Lombo</div>
+        <div class="desc">Com tomate, cebola, queijo e pão</div>
+      </div>
+      <div class="prices2"><div class="price small">R$ 40,00</div><div class="price small">R$ 55,00</div></div>
+    </li>
+    <li class="item">
+      <div class="txt">
+        <div class="name">Frango à Passarinho</div>
+        <div class="desc">Com fritas</div>
+      </div>
+      <div class="prices2"><div class="price small">—</div><div class="price small">R$ 40,00</div></div>
+    </li>
+    <li class="item">
+      <div class="txt"><div class="name">Polenta</div></div>
+      <div class="prices2"><div class="price small">R$ 20,00</div><div class="price small">R$ 28,00</div></div>
+    </li>
+    <li class="item">
+      <div class="txt">
+        <div class="name">Mini Salgados</div>
+        <div class="desc">Porção com 10 unidades</div>
+      </div>
+      <div class="dots"></div>
+      <div class="price">R$ 25,00</div>
+    </li>
+  </ul>
+
+  <div class="contact">
+    <div class="phone"><span class="wa">📱</span> (14) 98214-4789</div>
+    <div class="phone"><span class="wa">📱</span> (14) 98155-7309</div>
+  </div>
+  <div class="pagenote">Imagens ilustrativas</div>
+</section>
+
+</body>
+</html>
